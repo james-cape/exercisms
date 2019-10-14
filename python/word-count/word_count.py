@@ -1,21 +1,13 @@
-import re
-
-
 def count_words(sentence):
-    punctuations = "!&@$%^':&"
-    sentence = sentence.lower()
+    punctuations = "!&@$%^':&."
     accumulator = {}
-    # breakpoint()
-    sentence = sentence.replace("\t", " ")
-    sentence = sentence.replace(".", "")
-    sentence = sentence.replace(",\n", " ")
-    sentence = sentence.replace(",", " ")
-    sentence = sentence.replace("_", " ")
-    words = sentence.split(" ")
-    for word in words:
+    word_breaks = ["\t", "\n", ",", "_", " "]
+    for word_break in word_breaks:
+        sentence = sentence.lower().replace(word_break, " ")
+    for word in sentence.split(" "):
+        word = word.strip(punctuations)
         if word in accumulator:
-            accumulator[word.strip(punctuations)] += 1
-        elif word is not '' and word is not "\n":
-            accumulator[word.strip(punctuations)] = 1
-
+            accumulator[word] += 1
+        elif word is not '':
+            accumulator[word] = 1
     return accumulator
