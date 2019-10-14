@@ -17,20 +17,20 @@ class WordCountTest(unittest.TestCase):
             count_words("one fish two fish red fish blue fish"),
             {"one": 1, "fish": 4, "two": 1, "red": 1, "blue": 1},
         )
-    
+
     def test_handles_cramped_lists(self):
         self.assertEqual(count_words("one,two,three"), {"one": 1, "two": 1, "three": 1})
 
-    # def test_handles_expanded_lists(self):
-    #     self.assertEqual(
-    #         count_words("one,\ntwo,\nthree"), {"one": 1, "two": 1, "three": 1}
-    #     )
-    #
-    # def test_ignore_punctuation(self):
-    #     self.assertEqual(
-    #         count_words("car: carpet as java: javascript!!&@$%^&"),
-    #         {"car": 1, "carpet": 1, "as": 1, "java": 1, "javascript": 1},
-    #     )
+    def test_handles_expanded_lists(self):
+        self.assertEqual(
+            count_words("one,\ntwo,\nthree"), {"one": 1, "two": 1, "three": 1}
+        )
+
+    def test_ignore_punctuation(self):
+        self.assertEqual(
+            count_words("car: carpet as java: javascript!!&@$%^&"),
+            {"car": 1, "carpet": 1, "as": 1, "java": 1, "javascript": 1},
+        )
     #
     # def test_include_numbers(self):
     #     self.assertEqual(
