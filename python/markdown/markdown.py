@@ -16,29 +16,18 @@ def parse(markdown):
         if match_object:
             is_bold = False
             is_italic = False
-            curr = match_object.group(1)
-
-            alternate_match_object = re.match('(.*)__(.*)__(.*)', curr)
-
+            content = match_object.group(1)
+            line = '<li>' + content + '</li>'
             if not in_list:
                 in_list = True
-                if alternate_match_object:
-                    is_bold = True
-                alternate_match_object = re.match('(.*)_(.*)_(.*)', curr)
-                if alternate_match_object:
-                    is_italic = True
-                line = '<ul><li>' + curr + '</li>'
-            else:
-                line = '<li>' + curr + '</li>'
-
+                line = '<ul>' + line
+                if re.match('(.*)__(.*)__(.*)', content): is_bold = True
+                if re.match('(.*)_(.*)_(.*)', content): is_italic = True
         else:
             if in_list:
                 in_list_append = True
                 in_list = False
-
-        match_object = re.match('<h|<ul|<p|<li', line)
-        if not match_object:
-            line = '<p>' + line + '</p>'
+        if not re.match('<h|<ul|<p|<li', line): line = '<p>' + line + '</p>'
         match_object = re.match('(.*)__(.*)__(.*)', line)
         if match_object:
             line = match_object.group(1) + '<strong>' + match_object.group(2) + '</strong>' + match_object.group(3)
