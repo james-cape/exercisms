@@ -33,7 +33,7 @@ class MatrixTest(unittest.TestCase):
     def test_can_extract_column_from_non_square_matrix_with_no_corresponding_row(self):
         matrix = Matrix("1 2 3 4\n5 6 7 8\n9 8 7 6")
         self.assertEqual(matrix.column(4), [4, 8, 6])
-
+    
     def test_extract_column_where_numbers_have_different_widths(self):
         matrix = Matrix("89 1903 3\n18 3 1\n9 4 800")
         self.assertEqual(matrix.column(2), [1903, 3, 4])
