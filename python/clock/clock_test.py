@@ -67,7 +67,7 @@ class ClockTest(unittest.TestCase):
     def test_negative_hour_and_minutes_both_roll_over_continuously(self):
         self.assertEqual(str(Clock(-121, -5810)), "22:10")
 
-    # Add Minutes
+    # # Add Minutes
     def test_add_minutes(self):
         self.assertEqual(str(Clock(10, 0) + 3), "10:03")
 
@@ -117,7 +117,7 @@ class ClockTest(unittest.TestCase):
     def test_subtract_more_than_two_days(self):
         self.assertEqual(str(Clock(2, 20) - 3000), "00:20")
 
-    # Compare Two Clocks For Equality
+    # # Compare Two Clocks For Equality
     def test_clocks_with_same_time(self):
         self.assertEqual(Clock(15, 37), Clock(15, 37))
 
