@@ -9,9 +9,7 @@ class Clock(object):
         return f"{input_hours}:{input_minutes}"
 
     def __eq__(self, other):
-        input_hours = str((self.hour + int(self.minute // 60)) % 24).rjust(2, '0')
-        input_minutes = str(self.minute % 60).rjust(2, '0')
-        return other == f"{input_hours}:{input_minutes}"
+        return repr(self) == repr(other)
 
     def __add__(self, minutes):
         input_hours = str((self.hour + int((self.minute + minutes)//60))%24).rjust(2, '0')
