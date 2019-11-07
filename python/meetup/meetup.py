@@ -31,13 +31,15 @@ def meetup(year, month, week, day_of_week):
                 return date(year, month, i)
     if week == '5th':
         if month == 2:
-            breakpoint()
-            raise MeetupDayException
+            raise MeetupDayException('Only four weeks in Feb')
         else:
             for i in range(29, calendar.monthrange(year, month)[1] + 1):
                 if days[calendar.weekday(year, month, i)] == day_of_week:
                     return date(year, month, i)
 
-
 class MeetupDayException(Exception):
-    pass
+    def __init__(self, error_message):
+        self.error_message = error_message
+
+
+
