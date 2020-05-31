@@ -24,47 +24,41 @@ class Solution:
                 # Check for pacific connection
                 self.assign_ocean_if_connected(x, y, atlantic, revisit, matrix)
 
-
-
-
-
-
         return self.find_divide(pacific, atlantic)
 
     def assign_ocean_if_connected(self, x, y, ocean, revisit, matrix):
         if f'{x}, {y}' not in ocean:
-            # Check if elevation is higher or equal to any n/s/e/w neighbors in ocean hash
+            number_rows = len(matrix)
+            number_columns = len(matrix[0])
             # If so, add x,y to ocean hash (because it can flow down)
-            if self.flows_lower(x, y, matrix, ocean, revisit):
+            # Checks for any neighbor 1) on board, 2) flows to ocean, and 3) lower or equal to x,y elevation
+            if (
+                x+1 in range(number_rows) and f'{x+1}, {y}' in ocean and matrix[x][y] >= matrix[x+1][y] or
+                x-1 in range(number_rows) and f'{x-1}, {y}' in ocean and matrix[x][y] >= matrix[x-1][y] or
+                y+1 in range(number_columns) and f'{x}, {y+1}' in ocean and matrix[x][y] >= matrix[x][y+1] or
+                y-1 in range(number_columns) and f'{x}, {y-1}' in ocean and matrix[x][y] >= matrix[x][y-1]
+            ):
                 ocean[f'{x}, {y}'] = matrix[x][y]
 
-    def flows_lower(self, x, y, matrix, ocean, revisit):
-        number_rows = len(matrix)
-        number_columns = len(matrix[0])
 
-        # Add to revisit queue where flow goes unknown further elevations
-        # If 1) on matrix, 2) higher/equal to upcoming elevation, 3) not in ocean
-        # if (
-        #     ocean['name'] == 'pacific' and
-        #     y+1 in range(number_columns-1) and 
-        #     matrix[x][y] >= matrix[x][y+1] and 
-        #     f'{x}, {y+1}' not in ocean
-        # ) or (
-        #     ocean['name'] == 'atlantic' and
-        #     y-1 in range(number_columns-1) and 
-        #     matrix[x][y] >= matrix[x][y-1] and 
-        #     f'{x}, {y-1}' not in ocean
-        # ):
-        #     revisit.append([x, y])
+
+    #     # Add to revisit queue where flow goes unknown further elevations
+    #     # If 1) on matrix, 2) higher/equal to upcoming elevation, 3) not in ocean
+    #     # if (
+    #     #     ocean['name'] == 'pacific' and
+    #     #     y+1 in range(number_columns-1) and 
+    #     #     matrix[x][y] >= matrix[x][y+1] and 
+    #     #     f'{x}, {y+1}' not in ocean
+    #     # ) or (
+    #     #     ocean['name'] == 'atlantic' and
+    #     #     y-1 in range(number_columns-1) and 
+    #     #     matrix[x][y] >= matrix[x][y-1] and 
+    #     #     f'{x}, {y-1}' not in ocean
+    #     # ):
+    #     #     revisit.append([x, y])
         
 
-        # Checks for any neighbor 1) on board, 2) flows to ocean, and 3) lower or equal to x,y elevation
-        return (
-            x+1 in range(number_rows) and f'{x+1}, {y}' in ocean and matrix[x][y] >= matrix[x+1][y] or
-            x-1 in range(number_rows) and f'{x-1}, {y}' in ocean and matrix[x][y] >= matrix[x-1][y] or
-            y+1 in range(number_columns) and f'{x}, {y+1}' in ocean and matrix[x][y] >= matrix[x][y+1] or
-            y-1 in range(number_columns) and f'{x}, {y-1}' in ocean and matrix[x][y] >= matrix[x][y-1]
-        )
+
 
     def set_initial_ocean_coordinates(self, matrix, pacific, atlantic):
         number_rows = len(matrix)
