@@ -108,7 +108,7 @@ class Solution:
                     if f'{x}, {y}' not in pacific:
                         # Check if elevation is higher or equal to any n/s/e/w neighbors in pacific hash
                         # If so, add x,y to pacific hash (because it can flow down)
-                        if self.flows_lower(x, y, matrix, ocean=pacific):
+                        if self.flows_into_ocean(x, y, matrix, ocean=pacific):
                             all_mapped = False
                             pacific[f'{x}, {y}'] = matrix[x][y]
 
@@ -119,14 +119,14 @@ class Solution:
                     if f'{x}, {y}' not in atlantic:
                         # Check if elevation is higher or equal to any n/s/e/w neighbors in atlantic hash
                         # If so, add x,y to atlantic hash (because it can flow down)
-                        if self.flows_lower(x, y, matrix, ocean=atlantic):
+                        if self.flows_into_ocean(x, y, matrix, ocean=atlantic):
                             all_mapped = False
                             atlantic[f'{x}, {y}'] = matrix[x][y]
 
         return self.find_divide(pacific, atlantic)
 
 
-    def flows_lower(self, x, y, matrix, ocean):
+    def flows_into_ocean(self, x, y, matrix, ocean):
         # Checks for any neighbor 1) on board, 2) flows to ocean, and 3) lower or equal to x,y elevation
         return (
             x+1 in range(len(matrix)) and f'{x+1}, {y}' in ocean and matrix[x][y] >= matrix[x+1][y] or
@@ -134,6 +134,8 @@ class Solution:
             y+1 in range(len(matrix[0])) and f'{x}, {y+1}' in ocean and matrix[x][y] >= matrix[x][y+1] or
             y-1 in range(len(matrix[0])) and f'{x}, {y-1}' in ocean and matrix[x][y] >= matrix[x][y-1]
         )
+
+
 
     def set_initial_ocean_coordinates(self, matrix, pacific, atlantic):
         number_rows = len(matrix)
@@ -185,7 +187,7 @@ class Solution:
 #                     if f'{x}, {y}' not in pacific:
 #                         # Check if elevation is higher or equal to any n/s/e/w neighbors in pacific hash
 #                         # If so, add x,y to pacific hash (because it can flow down)
-#                         if self.flows_lower(x, y, matrix, ocean=pacific):
+#                         if self.flows_into_ocean(x, y, matrix, ocean=pacific):
 #                             all_mapped = False
 #                             pacific[f'{x}, {y}'] = matrix[x][y]
 
@@ -196,14 +198,14 @@ class Solution:
 #                     if f'{x}, {y}' not in atlantic:
 #                         # Check if elevation is higher or equal to any n/s/e/w neighbors in atlantic hash
 #                         # If so, add x,y to atlantic hash (because it can flow down)
-#                         if self.flows_lower(x, y, matrix, ocean=atlantic):
+#                         if self.flows_into_ocean(x, y, matrix, ocean=atlantic):
 #                             all_mapped = False
 #                             atlantic[f'{x}, {y}'] = matrix[x][y]
 
 #         return self.find_divide(pacific, atlantic)
 
 
-#     def flows_lower(self, x, y, matrix, ocean):
+#     def flows_into_ocean(self, x, y, matrix, ocean):
 #         # Checks for any neighbor 1) on board, 2) flows to ocean, and 3) lower or equal to x,y elevation
 #         return (
 #             x+1 in range(len(matrix)) and f'{x+1}, {y}' in ocean and matrix[x][y] >= ocean[f'{x+1}, {y}'] or
