@@ -135,7 +135,13 @@ class Solution:
             y-1 in range(len(matrix[0])) and f'{x}, {y-1}' in ocean and matrix[x][y] >= matrix[x][y-1]
         )
 
-
+    def flows_nowhere_except_into_unassigned(x, y, matrix, ocean):
+        return (
+            x+1 in range(len(matrix)) and f'{x+1}, {y}' not in ocean and matrix[x][y] >= matrix[x+1][y] or
+            x-1 in range(len(matrix)) and f'{x-1}, {y}' not in ocean and matrix[x][y] >= matrix[x-1][y] or
+            y+1 in range(len(matrix[0])) and f'{x}, {y+1}' not in ocean and matrix[x][y] >= matrix[x][y+1] or
+            y-1 in range(len(matrix[0])) and f'{x}, {y-1}' not in ocean and matrix[x][y] >= matrix[x][y-1]
+        )
 
     def set_initial_ocean_coordinates(self, matrix, pacific, atlantic):
         number_rows = len(matrix)
@@ -167,7 +173,7 @@ class Solution:
 
 
 # class Solution:
-#     def pacificAtlantic(self, matrix: List[List[int]]) -> List[List[int]]:
+#     def get_divide(self, matrix):
 #         if not matrix:
 #             return []
 #         # Set initial hashes of pacific and atlantic:
@@ -208,10 +214,18 @@ class Solution:
 #     def flows_into_ocean(self, x, y, matrix, ocean):
 #         # Checks for any neighbor 1) on board, 2) flows to ocean, and 3) lower or equal to x,y elevation
 #         return (
-#             x+1 in range(len(matrix)) and f'{x+1}, {y}' in ocean and matrix[x][y] >= ocean[f'{x+1}, {y}'] or
-#             x-1 in range(len(matrix)) and f'{x-1}, {y}' in ocean and matrix[x][y] >= ocean[f'{x-1}, {y}'] or
-#             y+1 in range(len(matrix[0])) and f'{x}, {y+1}' in ocean and matrix[x][y] >= ocean[f'{x}, {y+1}'] or
-#             y-1 in range(len(matrix[0])) and f'{x}, {y-1}' in ocean and matrix[x][y] >= ocean[f'{x}, {y-1}']
+#             x+1 in range(len(matrix)) and f'{x+1}, {y}' in ocean and matrix[x][y] >= matrix[x+1][y] or
+#             x-1 in range(len(matrix)) and f'{x-1}, {y}' in ocean and matrix[x][y] >= matrix[x-1][y] or
+#             y+1 in range(len(matrix[0])) and f'{x}, {y+1}' in ocean and matrix[x][y] >= matrix[x][y+1] or
+#             y-1 in range(len(matrix[0])) and f'{x}, {y-1}' in ocean and matrix[x][y] >= matrix[x][y-1]
+#         )
+
+#     def flows_nowhere_except_into_unassigned(x, y, matrix, ocean):
+#         return (
+#             x+1 in range(len(matrix)) and f'{x+1}, {y}' not in ocean and matrix[x][y] >= matrix[x+1][y] or
+#             x-1 in range(len(matrix)) and f'{x-1}, {y}' not in ocean and matrix[x][y] >= matrix[x-1][y] or
+#             y+1 in range(len(matrix[0])) and f'{x}, {y+1}' not in ocean and matrix[x][y] >= matrix[x][y+1] or
+#             y-1 in range(len(matrix[0])) and f'{x}, {y-1}' not in ocean and matrix[x][y] >= matrix[x][y-1]
 #         )
 
 #     def set_initial_ocean_coordinates(self, matrix, pacific, atlantic):
