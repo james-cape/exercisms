@@ -10,24 +10,20 @@ class Solution:
         atlantic_board = []
         # Create empty board of 0s (and 1s for Pacific border)
         for x in range(number_rows):
-            row = []
+            pacific_row = []
+            atlantic_row = []
             for y in range(number_columns):
                 if x == 0 or y == 0:
-                    row.append(1)
+                    pacific_row.append(1)
                 else:
-                    row.append(0)
-            pacific_board.append(row)
-
-        # Create empty board of 0s (and 1s for Atlantic border)
-        for x in range(number_rows):
-            row = []
-            for y in range(number_columns):
+                    pacific_row.append(0)
                 if x == number_rows - 1 or y == number_columns - 1:
-                    row.append(1)
+                    atlantic_row.append(1)
                 else:
-                    row.append(0)
-            atlantic_board.append(row)
-        
+                    atlantic_row.append(0)
+            pacific_board.append(pacific_row)
+            atlantic_board.append(atlantic_row)
+
         # Set Pacific coordinates
         revisit = []
         for x in range(number_rows):
