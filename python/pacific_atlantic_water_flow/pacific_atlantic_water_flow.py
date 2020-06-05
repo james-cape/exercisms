@@ -3,82 +3,75 @@ class Solution:
         if not matrix:
             return []
 
-        number_rows = len(matrix)
-        number_columns = len(matrix[0])
+        board_data = {
+            'number_rows': len(matrix),
+            'number_columns': len(matrix[0]),
+            'pacific_board': [],
+            'atlantic_board': [],
+            'matrix': matrix,
+            'revisit': []
+        }
 
-        pacific_board = []
-        atlantic_board = []
-        # Create empty board of 0s (and 1s for Pacific border)
-        for x in range(number_rows):
+        # Create empty board of 0s (and 1s for Ocean border)
+        for x in range(board_data['number_rows']):
             pacific_row = []
             atlantic_row = []
-            for y in range(number_columns):
+            for y in range(board_data['number_columns']):
                 if x == 0 or y == 0:
                     pacific_row.append(1)
                 else:
                     pacific_row.append(0)
-                if x == number_rows - 1 or y == number_columns - 1:
+                if x == board_data['number_rows'] - 1 or y == board_data['number_columns'] - 1:
                     atlantic_row.append(1)
                 else:
                     atlantic_row.append(0)
-            pacific_board.append(pacific_row)
-            atlantic_board.append(atlantic_row)
+            board_data['pacific_board'].append(pacific_row)
+            board_data['atlantic_board'].append(atlantic_row)
 
-        # Set Pacific coordinates
-        revisit = []
-        for x in range(number_rows):
-            for y in range(number_columns):
-                if pacific_board[x][y] == 1:
-                    self.add_higher_neighbors_to_board(x, y, matrix, pacific_board, revisit)
-                    while revisit:
-                        revisit_x = revisit[0][0]
-                        revisit_y = revisit[0][1]
-                        revisit.pop(0)
-                        self.add_higher_neighbors_to_board(revisit_x, revisit_y, matrix, pacific_board, revisit)
-        
-        # Atlantic coordinates
-        revisit = []
-        for x in range(number_rows-1, -1, -1):
-            for y in range(number_columns-1, -1, -1):
-                if atlantic_board[x][y] == 1:
-                    self.add_higher_neighbors_to_board(x, y, matrix, atlantic_board, revisit)
-                    while revisit:
-                        revisit_x = revisit[0][0]
-                        revisit_y = revisit[0][1]
-                        revisit.pop(0)
-                        self.add_higher_neighbors_to_board(revisit_x, revisit_y, matrix, atlantic_board, revisit)
+        # Find cells that flow to either ocean
+        self.set_ocean_board(board_data, True)
+        self.set_ocean_board(board_data, False)
 
         continental_divide = []
-        for row in range(number_rows):
-            for column in range(number_columns):
-                if pacific_board[row][column] == 1 and atlantic_board[row][column] == 1:
+        for row in range(board_data['number_rows']):
+            for column in range(board_data['number_columns']):
+                if board_data['pacific_board'][row][column] == 1 and board_data['atlantic_board'][row][column] == 1:
                     continental_divide.append([row, column])
         return continental_divide
-        
-    def add_higher_neighbors_to_board(self, x, y, matrix, board, revisit):
-        number_rows = len(matrix)
-        number_columns = len(matrix[0])
 
-        if x+1 in range(number_rows): 
-            if board[x+1][y] == 0:                
-                if matrix[x+1][y] >= matrix[x][y]:
-                    board[x+1][y] = 1
-                    revisit.append([x+1, y])
+
+    # Set Ocean coordinates
+    def set_ocean_board(self, board_data, pacific=True):
+        if pacific:
+            x_range = range(board_data['number_rows'])
+            y_range = range(board_data['number_columns'])
+            ocean_board = board_data['pacific_board']
+        else:
+            x_range = range(board_data['number_rows']-1, -1, -1)
+            y_range = range(board_data['number_columns']-1, -1, -1)
+            ocean_board = board_data['atlantic_board']
+
+        for x in x_range:
+            for y in y_range:
+                if ocean_board[x][y] == 1:
+                    self.add_higher_neighbors_to_board(x, y, board_data, ocean_board)
+                    while board_data['revisit']:
+                        revisit_x = board_data['revisit'][0][0]
+                        revisit_y = board_data['revisit'][0][1]
+                        board_data['revisit'].pop(0)
+                        self.add_higher_neighbors_to_board(revisit_x, revisit_y, board_data, ocean_board)
         
-        if x-1 in range(number_rows):
-            if board[x-1][y] == 0:
-                if matrix[x-1][y] >= matrix[x][y]:
-                    board[x-1][y] = 1
-                    revisit.append([x-1, y])
-        
-        if y+1 in range(number_columns):
-            if board[x][y+1] == 0:
-                if matrix[x][y+1] >= matrix[x][y]:
-                    board[x][y+1] = 1
-                    revisit.append([x, y+1])
-        
-        if y-1 in range(number_columns):
-            if board[x][y-1] == 0:
-                if matrix[x][y-1] >= matrix[x][y]:
-                    board[x][y-1] = 1
-                    revisit.append([x, y-1])
+
+    def add_higher_neighbors_to_board(self, x, y, board_data, board):
+
+        south = {'x': x+1, 'y': y}
+        north = {'x': x-1, 'y': y}
+        east = {'x': x, 'y': y+1}
+        west = {'x': x, 'y': y-1}
+
+        for n in [south, north, east, west]:
+            if n['x'] in range(board_data['number_rows']) and n['y'] in range(board_data['number_columns']):
+                if board[n['x']][n['y']] == 0:
+                    if board_data['matrix'][n['x']][n['y']] >= board_data['matrix'][x][y]:
+                        board[n['x']][n['y']] = 1
+                        board_data['revisit'].append([n['x'], n['y']])
