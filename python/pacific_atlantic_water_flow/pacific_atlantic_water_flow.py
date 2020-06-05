@@ -12,7 +12,14 @@ class Solution:
             'revisit': []
         }
 
-        # Create empty board of 0s (and 1s for Ocean border)
+        self.set_boards_with_borders(board_data)
+        self.fill_in_ocean(board_data, pacific=True)
+        self.fill_in_ocean(board_data, pacific=False)
+        
+        return self.find_divide(board_data)
+
+
+    def set_boards_with_borders(self, board_data):
         for x in range(board_data['number_rows']):
             pacific_row = []
             atlantic_row = []
@@ -28,20 +35,8 @@ class Solution:
             board_data['pacific_board'].append(pacific_row)
             board_data['atlantic_board'].append(atlantic_row)
 
-        # Find cells that flow to either ocean
-        self.set_ocean_board(board_data, True)
-        self.set_ocean_board(board_data, False)
 
-        continental_divide = []
-        for row in range(board_data['number_rows']):
-            for column in range(board_data['number_columns']):
-                if board_data['pacific_board'][row][column] == 1 and board_data['atlantic_board'][row][column] == 1:
-                    continental_divide.append([row, column])
-        return continental_divide
-
-
-    # Set Ocean coordinates
-    def set_ocean_board(self, board_data, pacific=True):
+    def fill_in_ocean(self, board_data, pacific=True):
         if pacific:
             x_range = range(board_data['number_rows'])
             y_range = range(board_data['number_columns'])
@@ -63,15 +58,24 @@ class Solution:
         
 
     def add_higher_neighbors_to_board(self, x, y, board_data, board):
-
-        south = {'x': x+1, 'y': y}
-        north = {'x': x-1, 'y': y}
-        east = {'x': x, 'y': y+1}
-        west = {'x': x, 'y': y-1}
-
-        for n in [south, north, east, west]:
+        neighbors = [
+            {'x': x+1, 'y': y},
+            {'x': x-1, 'y': y},
+            {'x': x, 'y': y+1},
+            {'x': x, 'y': y-1}
+        ]
+        for n in neighbors:
             if n['x'] in range(board_data['number_rows']) and n['y'] in range(board_data['number_columns']):
                 if board[n['x']][n['y']] == 0:
                     if board_data['matrix'][n['x']][n['y']] >= board_data['matrix'][x][y]:
                         board[n['x']][n['y']] = 1
                         board_data['revisit'].append([n['x'], n['y']])
+
+
+    def find_divide(self, board_data):
+        continental_divide = []
+        for row in range(board_data['number_rows']):
+            for column in range(board_data['number_columns']):
+                if board_data['pacific_board'][row][column] == 1 and board_data['atlantic_board'][row][column] == 1:
+                    continental_divide.append([row, column])
+        return continental_divide
